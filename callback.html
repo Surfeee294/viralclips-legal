@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>TikTok - Connexion réussie</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            padding: 50px;
+            background: #000;
+            color: #fff;
+        }
+
+        .success {
+            color: #00f2ea;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="success">✅ TikTok Connecté !</h1>
+    <p>Tu peux fermer cette fenêtre et retourner à l'app.</p>
+    <script>
+        // Get the authorization code from URL
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get('code');
+        const state = params.get('state');
+
+        if (code) {
+            // Send code to local backend
+            fetch('http://localhost:8000/auth/tiktok/callback?code=' + code + '&state=' + state)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        document.body.innerHTML = '<h1 class="success">✅ TikTok Connecté !</h1><p>Ferme cette fenêtre.</p>';
+                    }
+                })
+                .catch(e => console.log('Backend callback:', e));
+        }
+
+        // Close popup after 3 seconds
+        setTimeout(() => window.close(), 3000);
+    </script>
+</body>
+
+</html>
